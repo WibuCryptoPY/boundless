@@ -67,7 +67,7 @@ function install_node() {
 
     echo "Check NVIDIA Docker support..."
     if ! command -v nvidia-docker &> /dev/null; then
-        echo "Installing NVIDIA Container Toolkit..."
+        echo "正在安装 NVIDIA Container Toolkit..."
         distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
         curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
         curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
@@ -165,12 +165,13 @@ function install_node() {
     fi
     echo "rzup installation complete"
 
-    echo "Verifying rzup installation..."
-    rzup --version
-    if [ $? -ne 0 ]; then
-        echo "rzup verification failed, please check the installation"
-        exit 1
-    fi
+	echo "Verifying rzup installation..."
+	if [ -f "$HOME/.cargo/bin/rzup" ]; then
+		"$HOME/.cargo/bin/rzup" --version
+	else
+		echo "rzup not found at expected path: $HOME/.cargo/bin/rzup"
+		exit 1
+	fi
     echo "rzup verification passed"
 
     echo "Installing RISC Zero Rust toolchain..."
