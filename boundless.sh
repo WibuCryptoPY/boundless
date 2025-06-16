@@ -67,7 +67,7 @@ function install_node() {
 
     echo "Check NVIDIA Docker support..."
     if ! command -v nvidia-docker &> /dev/null; then
-        echo "正在安装 NVIDIA Container Toolkit..."
+        echo "Installing NVIDIA Container Toolkit..."
         distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
         curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
         curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
