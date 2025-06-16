@@ -1,12 +1,22 @@
 #!/bin/bash
 
+# Auto-install toilet if not available
+if ! command -v toilet &> /dev/null; then
+    echo "[!] 'toilet' not found. Installing..."
+    sudo apt update && sudo apt install toilet -y
+    if [ $? -ne 0 ]; then
+        echo "Failed to install toilet. Exiting..."
+        exit 1
+    fi
+fi
+
 # Color definitions
 CYAN='\033[0;36m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Show ASCII logo
+# Display ASCII logo
 function display_logo() {
     clear
     echo -e "${CYAN}"
@@ -21,9 +31,6 @@ function display_logo() {
 function main_menu() {
     while true; do
         display_logo
-        echo "================================================================"
-        echo "This script is written by @ferdie_jhovie, free and open-source."
-        echo "Do NOT pay anyone for this. Contact only via Twitter."
         echo "================================================================"
         echo "Press Ctrl + C to exit."
         echo "Please choose an action:"
@@ -145,7 +152,6 @@ function install_node() {
 
     echo "All dependencies installed. Log out & log in again to apply Docker permissions."
 
-    # Get environment variables
     echo "Enter your PRIVATE_KEY and Sepolia RPC URL from Alchemy:"
     read -p "PRIVATE_KEY: " PRIVATE_KEY
     read -p "RPC_URL (must include 'sepolia'): " RPC_URL
@@ -165,10 +171,9 @@ function install_node() {
     echo "RPC_URL=$RPC_URL" >> .env.eth-sepolia
     source .env.eth-sepolia
 
-    echo "Starting Bento service..."
-    echo "Run the following in a new terminal:"
+    echo "Start Bento service in a new terminal:"
     echo "cd $(pwd) && just bento"
-    read -p "Press Enter to continue after Bento is started..."
+    read -p "Press Enter to continue..."
 
     echo "Waiting 5 seconds before running bento_cli..."
     sleep 5
@@ -185,7 +190,7 @@ function install_node() {
     read -p "Press Enter to return to menu..."
 }
 
-# Function: Check staking balance
+# View staking balance
 function check_stake_balance() {
     clear
     echo "Checking staking balance..."
@@ -197,7 +202,7 @@ function check_stake_balance() {
 
     cd boundless
     source .env.eth-sepolia
-    [ -z "$PRIVATE_KEY" ] || [ -z "$RPC_URL" ] && echo "Environment variables not set properly." && read && return
+    [ -z "$PRIVATE_KEY" ] || [ -z "$RPC_URL" ] && echo "Environment variables not set." && read && return
 
     read -p "Enter wallet address: " WALLET_ADDRESS
     [[ ! "$WALLET_ADDRESS" =~ ^0x[a-fA-F0-9]{40}$ ]] && echo "Invalid wallet address format." && read && return
@@ -206,7 +211,7 @@ function check_stake_balance() {
     read -p "Press Enter to return..."
 }
 
-# Function: View broker logs
+# View broker logs
 function view_broker_logs() {
     clear
     echo "Viewing broker logs..."
@@ -220,12 +225,12 @@ function view_broker_logs() {
         return
     fi
 
-    echo "Showing logs. Press Ctrl+C to exit logs view."
+    echo "Showing logs. Press Ctrl+C to stop."
     just broker logs
     read -p "Press Enter to return..."
 }
 
-# Function: Remove node
+# Remove node
 function remove_node() {
     clear
     echo "Node removal process..."
@@ -247,7 +252,7 @@ function remove_node() {
     read -p "Press Enter to return..."
 }
 
-# Function: Multi-GPU setup (placeholder)
+# Multi-GPU setup placeholder
 function multi_gpu_setup() {
     clear
     echo "Multi-GPU Setup"
@@ -265,5 +270,5 @@ function multi_gpu_setup() {
     read -p "Press Enter to return..."
 }
 
-# Launch menu
+# Start main menu
 main_menu
