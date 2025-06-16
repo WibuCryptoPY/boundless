@@ -5,7 +5,7 @@ function main_menu() {
         clear
         echo "================================================================"
 		echo "Welcome to WibuCrypto Validator Setup!"
-		echo "Join us on Telegram: https://t.me/wibuairdrop142"
+		echo "Join us on Telegram: https://t.me/wibuairdrop142$"
         echo "================================================================"
 		echo "To exit the script, press Ctrl + C"
 		echo "Please select the operation to be performed:"
@@ -153,8 +153,12 @@ function install_node() {
     echo "Cargo verification passed"
 
     echo "Installing rzup..."
-    curl -L https://risczero.com/install | bash
-    source ~/.bashrc
+	curl -L https://risczero.com/install | bash
+
+	# Add rzup path to environment
+	export PATH="$HOME/.cargo/bin:$PATH"
+	echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+	source ~/.bashrc
     if [ $? -ne 0 ]; then
         echo "rzup installation failed, please check the network connection or install manually"
         exit 1
