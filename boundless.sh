@@ -152,21 +152,22 @@ function install_node() {
     fi
     echo "Cargo verification passed"
 
-    echo "Installing rzup..."
-    curl -L https://risczero.com/install | bash
+	echo "Installing rzup..."
+	curl -L https://risczero.com/install | bash
 
-    # ✅ Thêm dòng này để đảm bảo rzup được tìm thấy
-    export PATH="$HOME/.cargo/bin:$PATH"
-    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
-    source ~/.bashrc
+	# Add correct rzup path to environment
+	export PATH="$HOME/.risc0/bin:$PATH"
+	echo 'export PATH="$HOME/.risc0/bin:$PATH"' >> ~/.bashrc
+	source ~/.bashrc
 
-    echo "Verifying rzup installation..."
-    if [ -f "$HOME/.cargo/bin/rzup" ]; then
-        "$HOME/.cargo/bin/rzup" --version
-    else
-        echo "rzup not found at expected path: $HOME/.cargo/bin/rzup"
-        exit 1
-    fi
+	echo "Verifying rzup installation..."
+	if command -v rzup &>/dev/null; then
+		rzup --version
+	else
+		echo "rzup not found in PATH. Please ensure /root/.risc0/bin is added correctly."
+		exit 1
+	fi
+
     echo "rzup verification passed"
 
     echo "Installing RISC Zero Rust toolchain..."
