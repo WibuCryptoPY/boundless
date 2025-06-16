@@ -175,7 +175,7 @@ function install_node() {
     echo "rzup verification passed"
 
     echo "Installing RISC Zero Rust toolchain..."
-    rzup install rust
+    "$HOME/.risc0/bin/rzup" install rust
     if [ $? -ne 0 ]; then
         echo "RISC Zero Rust toolchain installation failed, please install manually"
         exit 1
@@ -184,7 +184,7 @@ function install_node() {
 
     echo "Installing cargo-risczero..."
     cargo install cargo-risczero
-    rzup install cargo-risczero
+    "$HOME/.risc0/bin/rzup" install cargo-risczero
     if [ $? -ne 0 ]; then
         echo "cargo-risczero installation failed, please check network connection or install manually"
         exit 1
