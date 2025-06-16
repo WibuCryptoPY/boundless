@@ -5,7 +5,7 @@ function main_menu() {
         clear
         echo "================================================================"
 		echo "Welcome to WibuCrypto Validator Setup!"
-		echo "Join us on Telegram: https://t.me/wibuairdrop142$"
+		echo "Join us on Telegram: https://t.me/wibuairdrop142"
         echo "================================================================"
 		echo "To exit the script, press Ctrl + C"
 		echo "Please select the operation to be performed:"
