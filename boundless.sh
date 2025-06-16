@@ -4,18 +4,18 @@ function main_menu() {
     while true; do
         clear
         echo "================================================================"
-		echo "Welcome to WibuCrypto Validator Setup!"
-		echo "Join us on Telegram: https://t.me/wibuairdrop142$"
+        echo "Welcome to WibuCrypto Validator Setup!"
+        echo "Join us on Telegram: https://t.me/wibuairdrop142$"
         echo "================================================================"
-		echo "To exit the script, press Ctrl + C"
-		echo "Please select the operation to be performed:"
-		echo "1) Install and deploy nodes"
-		echo "2) View the pledge balance"
-		echo "3) View the broker log"
-		echo "4) Delete nodes"
-		echo "q) Exit the script"
+        echo "To exit the script, press Ctrl + C"
+        echo "Please select the operation to be performed:"
+        echo "1) Install and deploy nodes"
+        echo "2) View the pledge balance"
+        echo "3) View the broker log"
+        echo "4) Delete nodes"
+        echo "q) Exit the script"
         echo "================================================================"
-		read -p "Please enter options [1/2/3/4/q]: " choice
+        read -p "Please enter options [1/2/3/4/q]: " choice
         case $choice in
             1)
                 install_node
@@ -44,7 +44,7 @@ function main_menu() {
 function install_node() {
     clear
     echo "Start installing and deploying nodes..."
-    
+
     if [ "$EUID" -ne 0 ]; then 
         echo "Please run this script with sudo"
         exit 1
@@ -67,7 +67,7 @@ function install_node() {
 
     echo "Check NVIDIA Docker support..."
     if ! command -v nvidia-docker &> /dev/null; then
-        echo "正在安装 NVIDIA Container Toolkit..."
+        echo "Installing NVIDIA Container Toolkit..."
         distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
         curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
         curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
@@ -104,7 +104,7 @@ function install_node() {
     if [ ! -d "boundless" ]; then
         git clone https://github.com/boundless-xyz/boundless
         if [ $? -ne 0 ]; then
-            echo "Cloning failed, please check whether the network connection or warehouse address is correct"
+            echo "Cloning failed, please check whether the network connection or repository address is correct"
             exit 1
         fi
     fi
@@ -153,29 +153,24 @@ function install_node() {
     echo "Cargo verification passed"
 
     echo "Installing rzup..."
-	curl -L https://risczero.com/install | bash
+    curl -L https://risczero.com/install | bash
 
-	# Add rzup path to environment
-	export PATH="$HOME/.cargo/bin:$PATH"
-	echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
-	source ~/.bashrc
-    if [ $? -ne 0 ]; then
-        echo "rzup installation failed, please check the network connection or install manually"
+    # ✅ Thêm dòng này để đảm bảo rzup được tìm thấy
+    export PATH="$HOME/.cargo/bin:$PATH"
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+    source ~/.bashrc
+
+    echo "Verifying rzup installation..."
+    if [ -f "$HOME/.cargo/bin/rzup" ]; then
+        "$HOME/.cargo/bin/rzup" --version
+    else
+        echo "rzup not found at expected path: $HOME/.cargo/bin/rzup"
         exit 1
     fi
-    echo "rzup installation complete"
-
-	echo "Verifying rzup installation..."
-	if [ -f "$HOME/.cargo/bin/rzup" ]; then
-		"$HOME/.cargo/bin/rzup" --version
-	else
-		echo "rzup not found at expected path: $HOME/.cargo/bin/rzup"
-		exit 1
-	fi
     echo "rzup verification passed"
 
     echo "Installing RISC Zero Rust toolchain..."
-    "$HOME/.risc0/bin/rzup" install rust
+    "$HOME/.cargo/bin/rzup" install rust
     if [ $? -ne 0 ]; then
         echo "RISC Zero Rust toolchain installation failed, please install manually"
         exit 1
@@ -184,7 +179,7 @@ function install_node() {
 
     echo "Installing cargo-risczero..."
     cargo install cargo-risczero
-    "$HOME/.risc0/bin/rzup" install cargo-risczero
+    "$HOME/.cargo/bin/rzup" install cargo-risczero
     if [ $? -ne 0 ]; then
         echo "cargo-risczero installation failed, please check network connection or install manually"
         exit 1
