@@ -115,7 +115,7 @@ function install_node() {
     echo "Cloning repository..."
     [ ! -d "boundless" ] && git clone https://github.com/boundless-xyz/boundless || exit 1
     cd boundless || exit 1
-    git checkout release-0.10.0 || exit 1
+    git checkout release-0.10 || exit 1
 
     echo "Installing Rust..."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
